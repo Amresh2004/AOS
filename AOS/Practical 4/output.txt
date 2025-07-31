@@ -1,0 +1,1 @@
+this is redirected standrad output using dup and open system calls.
