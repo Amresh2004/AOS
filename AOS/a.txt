@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <dirent.h>
+
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        fprintf(stderr, "Usage: %s <prefix>\n", argv[0]);
+        return EXIT_FAILURE;
+    }
+
+    const char *prefix = argv[1];
+    size_t prefix_len = strlen(prefix);
+
+    DIR *dir = opendir(".");
+    if (dir == NULL) {
+        perror("opendir");
+        return EXIT_FAILURE;
+    }
+
+    struct dirent *entry;
+    while ((entry = readdir(dir)) != NULL) {
+        // Skip "." and ".."
+        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+            continue;
+
+        if (strncmp(entry->d_name, prefix, prefix_len) == 0) {
+            printf("%s\n", entry->d_name);
+        }
+    }
+
+    closedir(dir);
+    return EXIT_SUCCESS;
+}
